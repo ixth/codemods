@@ -19,7 +19,6 @@ const FilterItemEducation = ({ k }) => {
                     nestedObjectValue: {
                         nestedKey: 'nestedValue',
                     },
-                    // comment
                 }}
             />
             <Component
@@ -27,6 +26,16 @@ const FilterItemEducation = ({ k }) => {
                     transformable: true,
                     'transformableToo': 2,
                     [`expression` + k]: 2,
+                }}
+            />
+            <Component
+                {...{
+                    // 1
+                    one: 1,
+                    /* 2 */
+                    two: 2,
+                    // 3
+                    /* 4 */
                 }}
             />
         </>

@@ -23,6 +23,7 @@ const FilterItemEducation = ({ k }) => {
             {...{
                 [`expression` + k]: 2
             }} />
+        <Component /* 1 */ one={1} /* 2 */ two={2} /* 3 */ /* 4 */ />
     </>;
 };
 

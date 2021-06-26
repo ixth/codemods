@@ -28,6 +28,10 @@ const transformProperty = (j, node) => {
     return j.jsxAttribute(name, getValue(j, node));
 };
 
+const processComments = (j, comments) => comments.map(
+    (node) => j.CommentLine.check(node) ? j.commentBlock(node.value + ' ') : node
+);
+
 module.exports = ({ source }, { jscodeshift: j }) =>
     j(source)
         .find(j.JSXSpreadAttribute, (node) => j.ObjectExpression.check(node.argument))
@@ -37,12 +41,21 @@ module.exports = ({ source }, { jscodeshift: j }) =>
             propertiesPath.each((propertyPath) => {
                 const transformed = transformProperty(j, propertyPath.node);
                 if (transformed !== null) {
+                    if (propertyPath.node.leadingComments) {
+                        explicitSpreadPath.insertBefore(...processComments(j, propertyPath.node.leadingComments));
+                    }
                     explicitSpreadPath.insertBefore(transformed);
+                    if (propertyPath.node.trailingComments) {
+                        explicitSpreadPath.insertBefore(...processComments(j, propertyPath.node.trailingComments));
+                    }
                     propertyPath.prune();
                 }
             });
 
             if (propertiesPath.getValueProperty('length') === 0) {
+                if (propertiesPath.node.comments && propertiesPath.node.comments.length > 0) {
+                    explicitSpreadPath.insertBefore(...processComments(j, propertiesPath.node.comments));
+                }
                 explicitSpreadPath.prune();
             }
         })
