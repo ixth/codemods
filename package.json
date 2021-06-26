@@ -1,0 +1,14 @@
+{
+  "name": "codemods",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jscodeshift": "^0.11.0",
+    "jest": "^27.0.5",
+    "jscodeshift": "^0.13.0"
+  }
+}
