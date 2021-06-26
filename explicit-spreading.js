@@ -32,12 +32,18 @@ module.exports = ({ source }, { jscodeshift: j }) =>
     j(source)
         .find(j.JSXSpreadAttribute, (node) => j.ObjectExpression.check(node.argument))
         .forEach((explicitSpreadPath) => {
-            explicitSpreadPath.get('argument', 'properties').each((propertyPath) => {
+            const propertiesPath = explicitSpreadPath.get('argument', 'properties');
+
+            propertiesPath.each((propertyPath) => {
                 const transformed = transformProperty(j, propertyPath.node);
                 if (transformed !== null) {
                     explicitSpreadPath.insertBefore(transformed);
                     propertyPath.prune();
                 }
             });
+
+            if (propertiesPath.getValueProperty('length') === 0) {
+                explicitSpreadPath.prune();
+            }
         })
         .toSource();
